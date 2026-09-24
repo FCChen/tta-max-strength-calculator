@@ -9,12 +9,11 @@
 
 ## 💡 新版亮點與功能
 
+*   **最終盤面兵力視覺化:** 運算結果會自動印出完整的「最終兵種數量表格」，並標示出所有加減變化 `(+1)` `(-1)`，讓行動軌跡與結果完美對接。
+*   **戰機翻倍來源拆分:** 演算法會嚴格把關「1 陣型最多配 1 戰機」的規則。結果列的武力明細會明確拆分為 `(部隊武力 + 陣型加成 + 戰機翻倍 + 額外武力)`，讓您清楚看到第二台戰鬥機是單純提供 5 點基礎部隊武力，絕無重複翻倍。
 *   **無縫計入額外武力:** 您只需要直接填入科技、領袖、殖民地等帶來的「現有額外武力」，系統會自動加總至最終結果中。
 *   **一鍵重置 (Reset):** 新增重置按鈕，一鍵將所有資源、兵種、額外武力歸零（閒置人口會貼心地維持在無限值的 99），方便快速測試不同路線。
 *   **智慧自動解鎖:** 所有兵種的科技方塊預設為未解鎖。但當您將某個兵種的數量調整為 `> 0` 時，系統會**自動幫您勾選解鎖**，讓輸入流程如絲綢般滑順。
-*   **大型觸控解鎖鈕:** UI 已針對觸控平板優化，解鎖按鈕面積巨大化，點擊更明確。
-*   **支援戰鬥機 (Air Forces):** Age III 的戰鬥機能夠智慧分配給武力加成最高的陣型並進行翻倍。
-*   **陣型降級相容:** 完美支援新版規則，部隊即便落後陣型 1 個時代，依然能觸發全額武力加成（例如 Age II 兵種能全額觸發 Age III 陣型）。
 
 ### 📝 實戰範例 (TW)
 
@@ -27,7 +26,7 @@
     *   資源輸入：5 MA, 12 礦
     *   兵種區：現有額外武力填入 `8`，步兵 A = `2`，騎兵 I = `1` (系統會自動幫您勾選騎兵I的解鎖)。
     *   目標陣型選擇：點選 `拿破崙` 圖片，來源選擇 `手中打出 (1 MA)`
-*   **結果：** 點擊計算，系統會瞬間告訴你潛在的最大武力，並給出詳細的武力來源 `(部隊 XX + 陣型 YY + 額外 8)`，以及你應該執行的最優動作序列（精確包含每一次建造/升級花費的 MA）。
+*   **結果：** 點擊計算，系統會瞬間告訴你潛在的最大武力，並給出詳細的武力來源，以及最終盤面到底長什麼樣子。
 
 ---
 
@@ -41,12 +40,11 @@ It is fully responsive and strictly client-side, allowing you to run it in any w
 
 ## 💡 Key Features
 
+*   **Final Unit Grid Visualization:** The results now print a precise grid of your final army composition, highlighting additions `(+1)` and subtractions `(-1)` so you can easily verify the calculated path.
+*   **Air Double Breakdown:** The algorithm strictly adheres to the "1 Air Force per 1 Formed Army" rule. The strength breakdown is now separated into `(Units + Tactic + Air Double + Extra)`, proving that surplus Air Forces only provide their base 5 strength without illegally doubling a tactic twice.
 *   **Extra Strength Integration:** Simply input any passive strength you have (from techs, colonies, etc.), and it will flawlessly add to your final maximum projection.
 *   **One-Click Reset:** Easily wipe the board clean to test a new scenario. It resets all values while conveniently keeping your Idle Pop at 99.
 *   **Smart Auto-Unlock:** All unit technologies start locked by default. However, the moment you increase a unit's quantity above 0, the system automatically unlocks that technology for you.
-*   **Touch-Friendly Unlocks:** The unlock buttons are enlarged for a seamless iPad/tablet experience.
-*   **Air Forces Integration:** Age III Air Forces automatically attach to your strongest formed armies to double their tactical bonuses.
-*   **Tactic Age Tolerance:** Perfectly implements the rule where a tactic grants its full bonus as long as the units forming it are not older than `Tactic Age - 1`.
 
 ### 📝 Examples (EN)
 
@@ -59,4 +57,4 @@ It is fully responsive and strictly client-side, allowing you to run it in any w
     *   Resources: 5 MA, 12 Mins
     *   Units: Current Extra Strength `8`, Inf A = `2`, Cav I = `1` (The system auto-unlocks Cav I for you).
     *   Target Tactic: Click the `Napoleonic` image, Source: `From Hand (1 MA)`
-*   **Result:** Click calculate, and the algorithm will instantly give you your max potential strength, break down the source `(Units XX + Tactic YY + Extra 8)`, and give you the step-by-step optimal sequence with precise MA costs.
+*   **Result:** Click calculate, and the algorithm will instantly give you your max potential strength, break down the exact sources, show your final army grid, and give you the step-by-step optimal sequence.
