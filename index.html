@@ -65,7 +65,29 @@
         .tactic-content .no-img { height: 70px; display: flex; align-items: center; justify-content: center; background: #E5E7EB; color: #9CA3AF; font-size: 0.8rem; }
         .tactic-content span { display: block; font-size: 0.75rem; padding: 0.4rem; font-weight: 600; color: var(--text-main); line-height: 1.2; }
 
-        .unit-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 0.5rem; align-items: end; text-align: center; margin-bottom: 1rem; font-size: 0.875rem; }
+        /* --- 手機版橫向滑動區塊 (解決版面超出邊界) --- */
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem; /* 留出滾動條空間 */
+        }
+        /* 自訂滾動條樣式讓畫面更美觀 */
+        .table-wrap::-webkit-scrollbar { height: 6px; }
+        .table-wrap::-webkit-scrollbar-track { background: transparent; }
+        .table-wrap::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 4px; }
+        .table-wrap::-webkit-scrollbar-thumb:hover { background: #9CA3AF; }
+
+        .unit-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr; 
+            gap: 0.5rem; 
+            align-items: end; 
+            text-align: center; 
+            font-size: 0.875rem; 
+            min-width: 480px; /* 強制最小寬度，避免欄位互相擠壓 */
+        }
         .unit-grid .header-cell { font-weight: 600; color: var(--text-muted); margin-bottom: 0.25rem; }
         .unit-grid .label-cell { font-weight: 600; text-align: right; padding-right: 0.5rem; margin-bottom: 0.5rem; }
         .cell-wrap { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
@@ -79,6 +101,14 @@
         }
         .tech-check input { width: 16px; height: 16px; margin-right: 0.3rem; accent-color: var(--primary); cursor: pointer; transform: scale(1.1); }
         .tech-check:has(input:checked) { background: #FEF2F2; color: var(--primary); border-color: #FCA5A5; }
+
+        /* 手機版微調 */
+        @media (max-width: 500px) {
+            .num-wrap button { flex: 0 0 28px; height: 32px; }
+            .num-wrap input { padding: 0.2rem 0; }
+            .tech-check { font-size: 0.75rem; padding: 0.35rem 0; }
+            .unit-grid { min-width: 450px; }
+        }
 
         .radio-group { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
         .radio-btn { flex: 1; position: relative; }
@@ -157,36 +187,38 @@
             </div>
         </div>
 
-        <div class="unit-grid">
-            <div></div>
-            <div class="header-cell" data-i18n="lbl_air">戰機 (Air)</div>
-            <div class="header-cell" data-i18n="lbl_art">砲兵 (Art)</div>
-            <div class="header-cell" data-i18n="lbl_cav">騎兵 (Cav)</div>
-            <div class="header-cell" data-i18n="lbl_inf">步兵 (Inf)</div>
-            
-            <div class="label-cell">III<br><span style="font-size:0.7rem; color:var(--text-muted)">(5武/7礦)</span></div>
-            <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_9"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_airIII', -1)">-</button><input type="number" id="u_airIII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_airIII', 1)">+</button></div></div>
-            <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_8"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_artIII', -1)">-</button><input type="number" id="u_artIII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_artIII', 1)">+</button></div></div>
-            <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_6"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_cavIII', -1)">-</button><input type="number" id="u_cavIII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_cavIII', 1)">+</button></div></div>
-            <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_3"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_infIII', -1)">-</button><input type="number" id="u_infIII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_infIII', 1)">+</button></div></div>
+        <div class="table-wrap">
+            <div class="unit-grid">
+                <div></div>
+                <div class="header-cell" data-i18n="lbl_air">戰機 (Air)</div>
+                <div class="header-cell" data-i18n="lbl_art">砲兵 (Art)</div>
+                <div class="header-cell" data-i18n="lbl_cav">騎兵 (Cav)</div>
+                <div class="header-cell" data-i18n="lbl_inf">步兵 (Inf)</div>
+                
+                <div class="label-cell">III<br><span style="font-size:0.7rem; color:var(--text-muted)">(5武/7礦)</span></div>
+                <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_9"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_airIII', -1)">-</button><input type="number" id="u_airIII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_airIII', 1)">+</button></div></div>
+                <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_8"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_artIII', -1)">-</button><input type="number" id="u_artIII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_artIII', 1)">+</button></div></div>
+                <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_6"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_cavIII', -1)">-</button><input type="number" id="u_cavIII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_cavIII', 1)">+</button></div></div>
+                <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_3"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_infIII', -1)">-</button><input type="number" id="u_infIII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_infIII', 1)">+</button></div></div>
 
-            <div class="label-cell">II<br><span style="font-size:0.7rem; color:var(--text-muted)">(3武/5礦)</span></div>
-            <div class="cell-wrap"><div class="num-wrap disabled"><button type="button" disabled>-</button><input type="number" disabled value="-"><button type="button" disabled>+</button></div></div>
-            <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_7"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_artII', -1)">-</button><input type="number" id="u_artII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_artII', 1)">+</button></div></div>
-            <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_5"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_cavII', -1)">-</button><input type="number" id="u_cavII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_cavII', 1)">+</button></div></div>
-            <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_2"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_infII', -1)">-</button><input type="number" id="u_infII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_infII', 1)">+</button></div></div>
+                <div class="label-cell">II<br><span style="font-size:0.7rem; color:var(--text-muted)">(3武/5礦)</span></div>
+                <div class="cell-wrap"><div class="num-wrap disabled"><button type="button" disabled>-</button><input type="number" disabled value="-"><button type="button" disabled>+</button></div></div>
+                <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_7"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_artII', -1)">-</button><input type="number" id="u_artII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_artII', 1)">+</button></div></div>
+                <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_5"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_cavII', -1)">-</button><input type="number" id="u_cavII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_cavII', 1)">+</button></div></div>
+                <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_2"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_infII', -1)">-</button><input type="number" id="u_infII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_infII', 1)">+</button></div></div>
 
-            <div class="label-cell">I<br><span style="font-size:0.7rem; color:var(--text-muted)">(2武/3礦)</span></div>
-            <div class="cell-wrap"><div class="num-wrap disabled"><button type="button" disabled>-</button><input type="number" disabled value="-"><button type="button" disabled>+</button></div></div>
-            <div class="cell-wrap"><div class="num-wrap disabled"><button type="button" disabled>-</button><input type="number" disabled value="-"><button type="button" disabled>+</button></div></div>
-            <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_4"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_cavI', -1)">-</button><input type="number" id="u_cavI" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_cavI', 1)">+</button></div></div>
-            <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_1"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_infI', -1)">-</button><input type="number" id="u_infI" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_infI', 1)">+</button></div></div>
+                <div class="label-cell">I<br><span style="font-size:0.7rem; color:var(--text-muted)">(2武/3礦)</span></div>
+                <div class="cell-wrap"><div class="num-wrap disabled"><button type="button" disabled>-</button><input type="number" disabled value="-"><button type="button" disabled>+</button></div></div>
+                <div class="cell-wrap"><div class="num-wrap disabled"><button type="button" disabled>-</button><input type="number" disabled value="-"><button type="button" disabled>+</button></div></div>
+                <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_4"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_cavI', -1)">-</button><input type="number" id="u_cavI" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_cavI', 1)">+</button></div></div>
+                <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_1"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_infI', -1)">-</button><input type="number" id="u_infI" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_infI', 1)">+</button></div></div>
 
-            <div class="label-cell">A<br><span style="font-size:0.7rem; color:var(--text-muted)">(1武/2礦)</span></div>
-            <div class="cell-wrap"><div class="num-wrap disabled"><button type="button" disabled>-</button><input type="number" disabled value="-"><button type="button" disabled>+</button></div></div>
-            <div class="cell-wrap"><div class="num-wrap disabled"><button type="button" disabled>-</button><input type="number" disabled value="-"><button type="button" disabled>+</button></div></div>
-            <div class="cell-wrap"><div class="num-wrap disabled"><button type="button" disabled>-</button><input type="number" disabled value="-"><button type="button" disabled>+</button></div></div>
-            <div class="cell-wrap"><div style="height: 1.8rem;"></div><div class="num-wrap"><button type="button" onclick="stepVal('u_infA', -1)">-</button><input type="number" id="u_infA" value="0" min="0"><button type="button" onclick="stepVal('u_infA', 1)">+</button></div></div>
+                <div class="label-cell">A<br><span style="font-size:0.7rem; color:var(--text-muted)">(1武/2礦)</span></div>
+                <div class="cell-wrap"><div class="num-wrap disabled"><button type="button" disabled>-</button><input type="number" disabled value="-"><button type="button" disabled>+</button></div></div>
+                <div class="cell-wrap"><div class="num-wrap disabled"><button type="button" disabled>-</button><input type="number" disabled value="-"><button type="button" disabled>+</button></div></div>
+                <div class="cell-wrap"><div class="num-wrap disabled"><button type="button" disabled>-</button><input type="number" disabled value="-"><button type="button" disabled>+</button></div></div>
+                <div class="cell-wrap"><div style="height: 1.8rem;"></div><div class="num-wrap"><button type="button" onclick="stepVal('u_infA', -1)">-</button><input type="number" id="u_infA" value="0" min="0"><button type="button" onclick="stepVal('u_infA', 1)">+</button></div></div>
+            </div>
         </div>
     </div>
 
@@ -215,7 +247,11 @@
         <div class="res-detail" id="res-cost">消耗：-- MA, -- 礦物, -- 人口</div>
         
         <div class="res-detail" style="margin-top:1rem; font-weight:700;" data-i18n="res_final_units">最終盤面兵種數量：</div>
-        <div class="unit-grid" id="res-final-grid" style="margin-bottom: 0.5rem; background: white; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border);"></div>
+        
+        <!-- 結果表格同樣套用 table-wrap 以支援手機橫向滑動 -->
+        <div class="table-wrap" style="background: white; padding: 0.75rem 0.75rem 0 0.75rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 0.5rem;">
+            <div class="unit-grid" id="res-final-grid" style="margin-bottom: 0; padding-bottom: 0.5rem;"></div>
+        </div>
 
         <div class="res-detail" style="margin-top:0.75rem; font-weight:700;" data-i18n="res_path">最佳行動順序：</div>
         <ul class="path-list" id="res-path-list"></ul>
