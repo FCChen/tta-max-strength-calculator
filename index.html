@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title data-i18n="title">TTA 軍力最佳化計算機</title>
+    <style>
+        :root {
+            --primary: #B91C1C; /* 軍事紅色 */
+            --primary-hover: #991B1B;
+            --bg: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --text-main: #1F2937;
+            --text-muted: #4B5563;
+            --border: #D1D5DB;
+            --success-bg: #FEF2F2;
+            --success-text: #991B1B;
+            --success-border: #F87171;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); line-height: 1.5; padding: 1rem; -webkit-font-smoothing: antialiased; }
+        .container { max-width: 650px; margin: 0 auto; position: relative; }
+        
+        .lang-btn {
+            position: absolute; top: 0; right: 0; background: var(--card-bg); border: 1px solid var(--border);
+            padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; cursor: pointer; color: var(--text-muted);
+        }
+        .lang-btn:hover { color: var(--text-main); border-color: var(--text-muted); }
+        
+        .header { text-align: center; margin-bottom: 1.5rem; padding-top: 1.5rem; }
+        .header h1 { font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.25rem; }
+        .header p { font-size: 0.875rem; color: var(--text-muted); }
+
+        .card { background-color: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1rem; border: 1px solid var(--border); }
+        
+        .section-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-main); border-bottom: 2px solid var(--bg); padding-bottom: 0.5rem; }
+        
+        .input-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1rem; }
+        .input-group label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .input-group input, .input-group select { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; background-color: var(--card-bg); }
+        .input-group input:focus, .input-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1); }
+        
+        .unit-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 0.5rem; align-items: center; text-align: center; margin-bottom: 1rem; font-size: 0.875rem; }
+        .unit-grid .header-cell { font-weight: 600; color: var(--text-muted); }
+        .unit-grid .label-cell { font-weight: 600; text-align: right; padding-right: 0.5rem; }
+        .unit-grid input { width: 100%; padding: 0.4rem; text-align: center; border: 1px solid var(--border); border-radius: 6px; }
+        .unit-grid input:disabled { background-color: #E5E7EB; color: #9CA3AF; cursor: not-allowed; }
+
+        .radio-group { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        .radio-btn { flex: 1; position: relative; }
+        .radio-btn input { position: absolute; opacity: 0; width: 0; height: 0; }
+        .radio-btn label { display: block; padding: 0.5rem 0; text-align: center; background-color: #F3F4F6; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 0.875rem; }
+        .radio-btn input:checked + label { background-color: var(--primary); color: white; border-color: var(--primary); }
+
+        button.calculate-btn { width: 100%; padding: 0.875rem; background-color: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        button.calculate-btn:hover { background-color: var(--primary-hover); }
+
+        #result-container { display: none; margin-top: 1rem; padding: 1.25rem; border-radius: 12px; background-color: var(--success-bg); border: 1px solid var(--success-border); }
+        .res-title { font-size: 1.1rem; font-weight: 700; color: var(--success-text); margin-bottom: 0.5rem; }
+        .res-str { font-size: 2.5rem; font-weight: 800; color: var(--primary); line-height: 1.2; }
+        .res-detail { font-size: 0.9rem; margin-top: 0.5rem; color: var(--text-main); font-weight: 500; }
+        .path-list { margin-top: 0.75rem; padding-left: 1.5rem; font-size: 0.875rem; color: var(--text-main); }
+        .path-list li { margin-bottom: 0.25rem; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <button class="lang-btn" onclick="toggleLang()">🌐 EN / TW</button>
+    <div class="header">
+        <h1 data-i18n="title">TTA 軍力最佳化計算機</h1>
+        <p data-i18n="subtitle">給定資源與陣型，計算最大潛在武力</p>
+    </div>
+
+    <div class="card">
+        <div class="section-title" data-i18n="sec_resources">可用資源</div>
+        <div class="input-row">
+            <div class="input-group">
+                <label data-i18n="label_ma">軍事行動點 (MA)</label>
+                <input type="number" id="in_ma" value="4" min="0">
+            </div>
+            <div class="input-group">
+                <label data-i18n="label_mins">礦物 (Minerals)</label>
+                <input type="number" id="in_mins" value="10" min="0">
+            </div>
+            <div class="input-group">
+                <label data-i18n="label_pop">閒置人口 (Pop)</label>
+                <input type="number" id="in_pop" value="2" min="0">
+            </div>
+        </div>
+
+        <div class="section-title" data-i18n="sec_tactic">目標陣型</div>
+        <div class="input-group" style="margin-bottom:0.75rem;">
+            <select id="in_tactic"></select>
+        </div>
+        <div class="radio-group">
+            <div class="radio-btn"><input type="radio" name="tac_src" id="src_active" value="0" checked><label for="src_active" data-i18n="src_active">已在場上 (0 MA)</label></div>
+            <div class="radio-btn"><input type="radio" name="tac_src" id="src_hand" value="1"><label for="src_hand" data-i18n="src_hand">從手中打出 (1 MA)</label></div>
+            <div class="radio-btn"><input type="radio" name="tac_src" id="src_common" value="2"><label for="src_common" data-i18n="src_common">複製公共 (2 MA)</label></div>
+        </div>
+
+        <div class="section-title" data-i18n="sec_units">現有兵種數量</div>
+        <div class="unit-grid">
+            <div></div><div class="header-cell">A (1武/2礦)</div><div class="header-cell">I (2武/3礦)</div><div class="header-cell">II (3武/5礦)</div><div class="header-cell">III (5武/7礦)</div>
+            
+            <div class="label-cell" data-i18n="lbl_inf">步兵 (Inf)</div>
+            <div><input type="number" id="u_infA" value="2" min="0"></div>
+            <div><input type="number" id="u_infI" value="0" min="0"></div>
+            <div><input type="number" id="u_infII" value="0" min="0"></div>
+            <div><input type="number" id="u_infIII" value="0" min="0"></div>
+
+            <div class="label-cell" data-i18n="lbl_cav">騎兵 (Cav)</div>
+            <div><input type="number" disabled value="-"></div>
+            <div><input type="number" id="u_cavI" value="0" min="0"></div>
+            <div><input type="number" id="u_cavII" value="0" min="0"></div>
+            <div><input type="number" id="u_cavIII" value="0" min="0"></div>
+
+            <div class="label-cell" data-i18n="lbl_art">砲兵 (Art)</div>
+            <div><input type="number" disabled value="-"></div>
+            <div><input type="number" disabled value="-"></div>
+            <div><input type="number" id="u_artII" value="0" min="0"></div>
+            <div><input type="number" id="u_artIII" value="0" min="0"></div>
+        </div>
+
+        <button class="calculate-btn" onclick="runCalculation()" data-i18n="btn_calc">計算最大武力</button>
+
+        <div id="result-container">
+            <div class="res-title" id="res-title">計算結果</div>
+            <div class="res-detail" id="res-current">目前基礎武力：</div>
+            <div class="res-detail">最大潛在武力：</div>
+            <div class="res-str" id="res-max">--</div>
+            <div class="res-detail" id="res-cost">消耗：-- MA, -- 礦物, -- 人口</div>
+            <div class="res-detail" style="margin-top:0.75rem;" data-i18n="res_path">最佳行動順序：</div>
+            <ul class="path-list" id="res-path"></ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    // i18n
+    const dict = {
+        'TW': {
+            'title': 'TTA 軍力最佳化計算機', 'subtitle': '給定資源與陣型，計算最大潛在武力',
+            'sec_resources': '可用資源', 'label_ma': '軍事行動點 (MA)', 'label_mins': '礦物 (Minerals)', 'label_pop': '閒置人口 (Pop)',
+            'sec_tactic': '目標陣型', 'src_active': '已在場上 (0 MA)', 'src_hand': '從手中打出 (1 MA)', 'src_common': '複製公共 (2 MA)',
+            'sec_units': '現有兵種數量', 'lbl_inf': '步兵 (Inf)', 'lbl_cav': '騎兵 (Cav)', 'lbl_art': '砲兵 (Art)',
+            'btn_calc': '計算最大武力', 'res_path': '最佳行動順序：', 'err_ma': '錯誤：軍事行動點不足以打出該陣型！'
+        },
+        'EN': {
+            'title': 'TTA Military Optimizer', 'subtitle': 'Calculate max strength based on resources & tactics',
+            'sec_resources': 'Available Resources', 'label_ma': 'Military Actions (MA)', 'label_mins': 'Minerals', 'label_pop': 'Idle Pop',
+            'sec_tactic': 'Target Tactic', 'src_active': 'Active (0 MA)', 'src_hand': 'From Hand (1 MA)', 'src_common': 'Copy Common (2 MA)',
+            'sec_units': 'Current Units', 'lbl_inf': 'Infantry', 'lbl_cav': 'Cavalry', 'lbl_art': 'Artillery',
+            'btn_calc': 'Calculate Max Strength', 'res_path': 'Optimal Action Sequence:', 'err_ma': 'Error: Not enough MA to play tactic!'
+        }
+    };
+    let lang = 'TW';
+    function toggleLang() {
+        lang = (lang === 'TW') ? 'EN' : 'TW';
+        document.querySelectorAll('[data-i18n]').forEach(el => el.innerText = dict[lang][el.getAttribute('data-i18n')]);
+        renderTacticOptions();
+    }
+
+    // TTA Data
+    const UNIT_DB = [
+        { id: 0, n_tw: '步兵 A', n_en: 'Inf A', type: 'inf', age: 0, cost: 2, str: 1 },
+        { id: 1, n_tw: '步兵 I', n_en: 'Inf I', type: 'inf', age: 1, cost: 3, str: 2 },
+        { id: 2, n_tw: '步兵 II', n_en: 'Inf II', type: 'inf', age: 2, cost: 5, str: 3 },
+        { id: 3, n_tw: '步兵 III', n_en: 'Inf III', type: 'inf', age: 3, cost: 7, str: 5 },
+        { id: 4, n_tw: '騎兵 I', n_en: 'Cav I', type: 'cav', age: 1, cost: 3, str: 2 },
+        { id: 5, n_tw: '騎兵 II', n_en: 'Cav II', type: 'cav', age: 2, cost: 5, str: 3 },
+        { id: 6, n_tw: '騎兵 III', n_en: 'Cav III', type: 'cav', age: 3, cost: 7, str: 5 },
+        { id: 7, n_tw: '砲兵 II', n_en: 'Art II', type: 'art', age: 2, cost: 5, str: 3 },
+        { id: 8, n_tw: '砲兵 III', n_en: 'Art III', type: 'art', age: 3, cost: 7, str: 5 }
+    ];
+
+    const TACTICS = [
+        { id: 'none', n_tw: '無陣型', n_en: 'No Tactic', age: 0, req: {i:0, c:0, a:0}, f: 0, ant: 0 },
+        { id: 't1', n_tw: 'I: 步兵方陣 (2步)', n_en: 'I: Fighting Band (2 Inf)', age: 1, req: {i:2, c:0, a:0}, f: 1, ant: 1 },
+        { id: 't2', n_tw: 'I: 羅馬軍團 (3步)', n_en: 'I: Legion (3 Inf)', age: 1, req: {i:3, c:0, a:0}, f: 2, ant: 2 },
+        { id: 't3', n_tw: 'I: 亞歷山大 (1步1騎)', n_en: 'I: Phalanx (1 Inf 1 Cav)', age: 1, req: {i:1, c:1, a:0}, f: 2, ant: 2 },
+        { id: 't4', n_tw: 'I: 征服者 (1步2騎)', n_en: 'I: Conquistadors (1 Inf 2 Cav)', age: 1, req: {i:1, c:2, a:0}, f: 3, ant: 3 },
+        { id: 't5', n_tw: 'I: 重裝騎兵 (3騎)', n_en: 'I: Heavy Cavalry (3 Cav)', age: 1, req: {i:0, c:3, a:0}, f: 4, ant: 4 },
+        { id: 't6', n_tw: 'II: 拿破崙 (1步1騎1砲)', n_en: 'II: Napoleonic (1 Inf 1 Cav 1 Art)', age: 2, req: {i:1, c:1, a:1}, f: 7, ant: 4 },
+        { id: 't7', n_tw: 'II: 壕溝戰 (2步1砲)', n_en: 'II: Entrenchments (2 Inf 1 Art)', age: 2, req: {i:2, c:0, a:1}, f: 6, ant: 3 },
+        { id: 't8', n_tw: 'II: 防禦部隊 (2步1騎)', n_en: 'II: Defensive (2 Inf 1 Cav)', age: 2, req: {i:2, c:1, a:0}, f: 5, ant: 3 },
+        { id: 't9', n_tw: 'II: 砲兵部隊 (2砲)', n_en: 'II: Artillery (2 Art)', age: 2, req: {i:0, c:0, a:2}, f: 5, ant: 3 },
+        { id: 't10', n_tw: 'II: 騎兵部隊 (3騎)', n_en: 'II: Cavalrymen (3 Cav)', age: 2, req: {i:0, c:3, a:0}, f: 8, ant: 4 },
+        { id: 't11', n_tw: 'II: 機動砲兵 (1騎1砲)', n_en: 'II: Mobile Artillery (1 Cav 1 Art)', age: 2, req: {i:0, c:1, a:1}, f: 5, ant: 3 },
+        { id: 'spec', n_tw: 'II: 驃騎兵 (2騎-等級加成)', n_en: 'II: Hussars (2 Cav - Scale Bonus)', age: 2, req: {i:0, c:2, a:0}, f: 'sp', ant: 'sp' },
+        { id: 't12', n_tw: 'III: 現代軍隊 (1步1騎1砲)', n_en: 'III: Modern (1 Inf 1 Cav 1 Art)', age: 3, req: {i:1, c:1, a:1}, f: 9, ant: 5 },
+        { id: 't13', n_tw: 'III: 機械化 (2步1騎1砲)', n_en: 'III: Mechanized (2 Inf 1 Cav 1 Art)', age: 3, req: {i:2, c:1, a:1}, f: 13, ant: 7 },
+        { id: 't14', n_tw: 'III: 裝甲軍隊 (1騎2砲)', n_en: 'III: Armored (1 Cav 2 Art)', age: 3, req: {i:0, c:1, a:2}, f: 10, ant: 5 },
+        { id: 't15', n_tw: 'III: 突擊軍隊 (1步2騎1砲)', n_en: 'III: Shock (1 Inf 2 Cav 1 Art)', age: 3, req: {i:1, c:2, a:1}, f: 11, ant: 6 },
+        { id: 't16', n_tw: 'III: 陣地軍隊 (2步2砲)', n_en: 'III: Trench (2 Inf 2 Art)', age: 3, req: {i:2, c:0, a:2}, f: 12, ant: 6 }
+    ];
+
+    function renderTacticOptions() {
+        const sel = document.getElementById('in_tactic');
+        const val = sel.value || 'none';
+        sel.innerHTML = '';
+        TACTICS.forEach(t => {
+            let opt = document.createElement('option');
+            opt.value = t.id; opt.innerText = (lang === 'TW') ? t.n_tw : t.n_en;
+            sel.appendChild(opt);
+        });
+        sel.value = val;
+    }
+    renderTacticOptions();
+
+    const TARGETS = [ [0,1,2,3], [1,2,3], [2,3], [3], [4,5,6], [5,6], [6], [7,8], [8], [-1,0,1,2,3,4,5,6,7,8] ];
+    
+    let memoParts = {};
+    function getParts(n, k) {
+        let key = n+','+k; if(memoParts[key]) return memoParts[key];
+        if(k === 1) return [[n]]; let res = [];
+        for(let i=0; i<=n; i++) { let sub = getParts(n-i, k-1); for(let s of sub) res.push([i, ...s]); }
+        memoParts[key] = res; return res;
+    }
+
+    function evaluateStr(u, t) {
+        let base = 0; for(let i=0; i<9; i++) base += u[i] * UNIT_DB[i].str;
+        if(t.id === 'none') return { total: base, base, bonus: 0 };
+        
+        if(t.id === 'spec') {
+            let cavs = [];
+            for(let i=0; i<u[6]; i++) cavs.push(3);
+            for(let i=0; i<u[5]; i++) cavs.push(2);
+            for(let i=0; i<u[4]; i++) cavs.push(1);
+            let b = 0;
+            while(cavs.length >= 2) { let c1=cavs.shift(); let c2=cavs.shift(); b += (2 + Math.min(c1, c2)); }
+            return { total: base+b, base, bonus: b };
+        }
+        
+        let c = { i:0, c:0, a:0 }, v = { i:0, c:0, a:0 };
+        for(let i=0; i<=3; i++) { c.i += u[i]; if(UNIT_DB[i].age >= t.age) v.i += u[i]; }
+        for(let i=4; i<=6; i++) { c.c += u[i]; if(UNIT_DB[i].age >= t.age) v.c += u[i]; }
+        for(let i=7; i<=8; i++) { c.a += u[i]; if(UNIT_DB[i].age >= t.age) v.a += u[i]; }
+        
+        let mf = Infinity, mt = Infinity;
+        if(t.req.i > 0) { mf = Math.min(mf, Math.floor(v.i/t.req.i)); mt = Math.min(mt, Math.floor(c.i/t.req.i)); }
+        if(t.req.c > 0) { mf = Math.min(mf, Math.floor(v.c/t.req.c)); mt = Math.min(mt, Math.floor(c.c/t.req.c)); }
+        if(t.req.a > 0) { mf = Math.min(mf, Math.floor(v.a/t.req.a)); mt = Math.min(mt, Math.floor(c.a/t.req.a)); }
+        if(mf === Infinity) mf = 0; if(mt === Infinity) mt = 0;
+        
+        let b = mf * t.f + (mt - mf) * t.ant;
+        return { total: base+b, base, bonus: b };
+    }
+
+    function runCalculation() {
+        const C = (id) => parseInt(document.getElementById(id).value, 10) || 0;
+        let init_ma = C('in_ma'), mins = C('in_mins'), pop = C('in_pop');
+        let tacCost = parseInt(document.querySelector('input[name="tac_src"]:checked').value, 10);
+        let tac = TACTICS.find(t => t.id === document.getElementById('in_tactic').value);
+        let resDiv = document.getElementById('result-container');
+        
+        if (init_ma < tacCost) {
+            resDiv.style.display = 'block'; resDiv.style.backgroundColor = '#FEF2F2';
+            resDiv.innerHTML = `<div class="res-title" style="color:#B91C1C;">${dict[lang]['err_ma']}</div>`;
+            return;
+        }
+
+        let init_u = [C('u_infA'), C('u_infI'), C('u_infII'), C('u_infIII'), C('u_cavI'), C('u_cavII'), C('u_cavIII'), C('u_artII'), C('u_artIII')];
+        let curr_eval = evaluateStr(init_u, {id:'none'});
+        
+        let best = { str: -1, state: null, path: [] };
+        
+        function dfs(step, r_ma, r_min, u, path) {
+            if(step === 9) {
+                let e = evaluateStr(u, tac);
+                if(e.total > best.str) { best.str = e.total; best.state = {u:[...u], ma: r_ma, min: r_min, e}; best.path = [...path]; }
+                return;
+            }
+            let limit = (step < 9) ? init_u[step] : pop;
+            let parts = getParts(limit, TARGETS[step].length);
+            for(let p of parts) {
+                let c_ma = 0, c_min = 0;
+                for(let i=1; i<p.length; i++) {
+                    c_ma += p[i];
+                    if(step < 9) c_min += p[i] * (UNIT_DB[TARGETS[step][i]].cost - UNIT_DB[step].cost);
+                    else c_min += p[i] * UNIT_DB[TARGETS[step][i]].cost;
+                }
+                if(c_ma <= r_ma && c_min <= r_min) {
+                    let nu = [...u];
+                    for(let i=0; i<p.length; i++) {
+                        let t_id = TARGETS[step][i];
+                        if(t_id !== -1) nu[t_id] += p[i];
+                    }
+                    path.push({s: step, p: p});
+                    dfs(step+1, r_ma - c_ma, r_min - c_min, nu, path);
+                    path.pop();
+                }
+            }
+        }
+        
+        dfs(0, init_ma - tacCost, mins, [0,0,0,0,0,0,0,0,0], []);
+        
+        // Render Output
+        resDiv.style.display = 'block'; resDiv.style.backgroundColor = 'var(--success-bg)';
+        resDiv.innerHTML = `
+            <div class="res-title">${lang==='TW'?'計算結果':'Results'}</div>
+            <div class="res-detail">${lang==='TW'?'目前部隊基礎武力 (不含陣型)：':'Base Strength (Units Only):'} ${curr_eval.total}</div>
+            <div class="res-detail">${lang==='TW'?'最大潛在總武力：':'Max Potential Strength:'}</div>
+            <div class="res-str">${best.str}</div>
+            <div class="res-detail">${lang==='TW'?'消耗資源：':'Resources Used:'} ${init_ma - best.state.ma} MA, ${mins - best.state.min} Minerals, ${pop - (best.path[9]?best.path[9].p[0]:pop)} Pop</div>
+            <div class="res-detail" style="margin-top:0.75rem; font-weight:700;">${lang==='TW'?'最佳行動順序：':'Optimal Action Sequence:'}</div>
+            <ul class="path-list" id="res-path-list"></ul>
+        `;
+        
+        const list = document.getElementById('res-path-list');
+        if (tacCost > 0) list.innerHTML += `<li>${lang==='TW'? (tacCost===1?'打出手中陣型 (1 MA)':'複製公共陣型 (2 MA)') : (tacCost===1?'Play Tactic from Hand (1 MA)':'Copy Common Tactic (2 MA)')}</li>`;
+        
+        let builtOrUpgraded = false;
+        best.path.forEach(item => {
+            let step = item.s, p = item.p;
+            if(step < 9) {
+                let from = UNIT_DB[step];
+                for(let i=1; i<p.length; i++) {
+                    if(p[i] > 0) {
+                        let to = UNIT_DB[TARGETS[step][i]];
+                        let txt = lang === 'TW' ? `升級 ${from.n_tw} ➔ ${to.n_tw} (x${p[i]})` : `Upgrade ${from.n_en} ➔ ${to.n_en} (x${p[i]})`;
+                        list.innerHTML += `<li>${txt}</li>`;
+                        builtOrUpgraded = true;
+                    }
+                }
+            } else {
+                for(let i=1; i<p.length; i++) {
+                    if(p[i] > 0) {
+                        let to = UNIT_DB[TARGETS[step][i]];
+                        let txt = lang === 'TW' ? `建造 ${to.n_tw} (x${p[i]})` : `Build ${to.n_en} (x${p[i]})`;
+                        list.innerHTML += `<li>${txt}</li>`;
+                        builtOrUpgraded = true;
+                    }
+                }
+            }
+        });
+        if (!builtOrUpgraded && tacCost === 0) {
+            list.innerHTML += `<li>${lang==='TW'?'無須任何行動 (保持現狀)':'No actions needed (Keep as is)'}</li>`;
+        }
+    }
+</script>
+</body>
+</html>
