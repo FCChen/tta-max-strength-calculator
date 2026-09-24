@@ -1,0 +1,1 @@
+# tta-max-strength-calculator
