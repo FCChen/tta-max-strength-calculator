@@ -3,35 +3,31 @@
 
 這是一個專為知名桌遊《歷史巨輪 (Through the Ages)》設計的輔助工具。在遊戲中，為了湊出最強的陣型，往往需要精算手中的**軍事行動點 (MA)**、**礦物** 以及 **閒置人口** 來決定哪些部隊該建造、哪些該升級。
 
-這個網頁工具採用 **Backtracking DFS 演算法**，能在毫秒內算出在給定資源下的「最大潛在武力」，並直接列出最省資源的「最佳行動順序」。所有陣型列表皆已視覺化呈現，並支援過期陣型（Antiquated Tactics）的武力衰減計算。此外，UI 已針對觸控平板優化，能透過點擊增減數值。
+這個網頁工具採用 **Backtracking DFS 演算法**，能在毫秒內算出在給定資源下的「最大潛在武力」，並直接列出最省資源的「最佳行動順序」。完全支援擴充版的**戰鬥機 (Air Forces)** 功能、以及**降級陣型武力 (Age - 1)** 觸發全額加成的進階規則。
 
 本工具無伺服器後端，純前端運作，您可以直接使用手機或 iPad 的瀏覽器開啟，並加入主畫面當作 Web App 使用。支援繁體中文 (TW) 與英文 (EN)。
 
-## 💡 使用說明與變數定義
+## 💡 新版亮點與功能
 
-*   **可用資源:** 
-    *   **軍事行動點 (MA):** 你這回合可以用的紅點數量。
-    *   **礦物 (Minerals):** 你現有的礦物數量。
-    *   **閒置人口 (Pop):** 你擁有的黃色工人數量（建造新部隊必備，升級部隊則不需要）。預設為 99 代表人口充足無限制。
-*   **目標陣型 & 來源:** 點擊圖片選擇你想湊成的陣型（圖片需放置於 `tactic/` 資料夾內）。如果該陣型已經在你場上，選擇「已在場上 (0 MA)」。如果要從手上打出，會自動扣除 1 MA；複製別人的會自動扣除 2 MA。
-*   **現有兵種數量:** 填入你場上各時代兵種的數量。表格排列已優化為「砲兵-騎兵-步兵」且由新到舊 (III -> II -> I -> A)，貼合實際玩家視角。預設值全為 0。
+*   **無縫計入額外武力:** 您只需要直接填入科技、領袖、殖民地等帶來的「現有額外武力」，系統會自動加總至最終結果中。
+*   **一鍵重置 (Reset):** 新增重置按鈕，一鍵將所有資源、兵種、額外武力歸零（閒置人口會貼心地維持在無限值的 99），方便快速測試不同路線。
+*   **智慧自動解鎖:** 所有兵種的科技方塊預設為未解鎖。但當您將某個兵種的數量調整為 `> 0` 時，系統會**自動幫您勾選解鎖**，讓輸入流程如絲綢般滑順。
+*   **大型觸控解鎖鈕:** UI 已針對觸控平板優化，解鎖按鈕面積巨大化，點擊更明確。
+*   **支援戰鬥機 (Air Forces):** Age III 的戰鬥機能夠智慧分配給武力加成最高的陣型並進行翻倍。
+*   **陣型降級相容:** 完美支援新版規則，部隊即便落後陣型 1 個時代，依然能觸發全額武力加成（例如 Age II 兵種能全額觸發 Age III 陣型）。
 
 ### 📝 實戰範例 (TW)
 
-> 你現在在 Age II (二時代)，你想打出手上的**「拿破崙 (1步 1騎 1砲)」**陣型。
-> 你的資源有：**5 MA、12 礦物、2 個閒置人口**。
+> 你現在在 Age II (二時代)，你除了部隊外，科技與殖民地等為你帶來了 `8` 點額外武力。你想打出手上的**「拿破崙 (1步 1騎 1砲)」**陣型。
+> 你的資源有：**5 MA、12 礦物、人口無限**。
 > 你場上目前只有：**2 個步兵 A** 和 **1 個騎兵 I**。
 > 你想知道怎麼做才能極大化這回合的武力？
 
 *   **操作方式：**
-    *   資源輸入：5 MA, 12 礦, 2 人口
-    *   陣型選擇：點選 `拿破崙` 圖片，來源選擇 `從手中打出 (1 MA)`
-    *   部隊輸入：步兵 A (Row A, 右欄) = `2`，騎兵 I (Row I, 中欄) = `1`
-*   **結果：** 點擊計算，系統會瞬間告訴你潛在的最大武力，並給出詳細的武力來源 `(基礎 6 + 陣型加成 7)`，以及你應該：
-    1. 打出手中陣型 (1 MA)
-    2. 升級 步兵 A ➔ 步兵 I x 1 (1 MA)
-    3. 建造 砲兵 II x 1 (1 MA)
-    這就是演算法幫你找到的最優解！
+    *   資源輸入：5 MA, 12 礦
+    *   兵種區：現有額外武力填入 `8`，步兵 A = `2`，騎兵 I = `1` (系統會自動幫您勾選騎兵I的解鎖)。
+    *   目標陣型選擇：點選 `拿破崙` 圖片，來源選擇 `手中打出 (1 MA)`
+*   **結果：** 點擊計算，系統會瞬間告訴你潛在的最大武力，並給出詳細的武力來源 `(部隊 XX + 陣型 YY + 額外 8)`，以及你應該執行的最優動作序列（精確包含每一次建造/升級花費的 MA）。
 
 ---
 
@@ -39,32 +35,28 @@
 
 As enthusiasts of this wonderful game, my friends and I created a tool to calculate the maximum potential military strength and the optimal action sequence. In *Through the Ages*, finding the best combination of building and upgrading units to match a tactic—constrained by **Military Actions (MA)**, **Minerals**, and **Idle Population**—can be a brain-burner.
 
-This tool uses a highly optimized **Backtracking DFS algorithm** to instantly solve for the maximum possible strength and outputs the exact sequence of actions with MA costs to achieve it. It features visual tactic selection and fully supports Antiquated Tactic calculations. The UI is also highly optimized for touch devices with stepper buttons.
+This tool uses a highly optimized **Backtracking DFS algorithm** to instantly solve for the maximum possible strength and outputs the exact sequence of actions with MA costs to achieve it. It features visual tactic selection, **Air Forces (Age III)** double-bonus logic, and fully supports the modern rule where units `Age - 1` still grant the full tactical bonus.
 
 It is fully responsive and strictly client-side, allowing you to run it in any web browser or save it to your device's home screen as a standalone web app. It supports both Traditional Chinese (TW) and English (EN).
 
-## 💡 How to Use & Variables
+## 💡 Key Features
 
-*   **Available Resources:** 
-    *   **Military Actions (MA):** The red tokens you have available.
-    *   **Minerals:** Your current minerals.
-    *   **Idle Pop:** Your available yellow tokens (required for building new units, but not for upgrading). Default is 99, assuming unlimited pop.
-*   **Target Tactic & Source:** Click the tactic image you want to form (requires placing images in the `tactic/` folder). Specify if it is already active (costs 0 MA), in your hand (costs 1 MA), or common (costs 2 MA).
-*   **Current Units:** Enter the count of your existing units across different ages. The grid is organized visually to match player intuition (Artillery-Cavalry-Infantry, sorted from Age III down to Age A). Default values are all 0.
+*   **Extra Strength Integration:** Simply input any passive strength you have (from techs, colonies, etc.), and it will flawlessly add to your final maximum projection.
+*   **One-Click Reset:** Easily wipe the board clean to test a new scenario. It resets all values while conveniently keeping your Idle Pop at 99.
+*   **Smart Auto-Unlock:** All unit technologies start locked by default. However, the moment you increase a unit's quantity above 0, the system automatically unlocks that technology for you.
+*   **Touch-Friendly Unlocks:** The unlock buttons are enlarged for a seamless iPad/tablet experience.
+*   **Air Forces Integration:** Age III Air Forces automatically attach to your strongest formed armies to double their tactical bonuses.
+*   **Tactic Age Tolerance:** Perfectly implements the rule where a tactic grants its full bonus as long as the units forming it are not older than `Tactic Age - 1`.
 
 ### 📝 Examples (EN)
 
-> You are in Age II and want to play the **"Napoleonic (1 Inf, 1 Cav, 1 Art)"** tactic from your hand.
-> You have: **5 MAs, 12 Minerals, and 2 Idle Pop**.
+> You are in Age II and have `8` passive Extra Strength from colonies and technologies. You want to play the **"Napoleonic (1 Inf, 1 Cav, 1 Art)"** tactic from your hand.
+> You have: **5 MAs, 12 Minerals, and unlimited Pop**.
 > Your current army consists of: **2 Inf A** and **1 Cav I**.
 > What is the absolute best way to spend your resources this turn?
 
 *   **How to input:**
-    *   Resources: 5 MA, 12 Mins, 2 Pop
-    *   Tactic: Click the `Napoleonic` image, Source: `From Hand (1 MA)`
-    *   Units: Inf A (Row A, Right col) = `2`, Cav I (Row I, Mid col) = `1`
-*   **Result:** Click calculate, and the algorithm will instantly give you your max potential strength, break down the source `(Base Str 6 + Tactic Bonus 7)`, and give you the sequence:
-    1. Play Tactic from Hand (1 MA)
-    2. Upgrade Inf A ➔ Inf I x 1 (1 MA)
-    3. Build Art II x 1 (1 MA)
-    This takes the guesswork completely out of your turn!
+    *   Resources: 5 MA, 12 Mins
+    *   Units: Current Extra Strength `8`, Inf A = `2`, Cav I = `1` (The system auto-unlocks Cav I for you).
+    *   Target Tactic: Click the `Napoleonic` image, Source: `From Hand (1 MA)`
+*   **Result:** Click calculate, and the algorithm will instantly give you your max potential strength, break down the source `(Units XX + Tactic YY + Extra 8)`, and give you the step-by-step optimal sequence with precise MA costs.
