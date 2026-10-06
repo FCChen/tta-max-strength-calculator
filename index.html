@@ -24,7 +24,8 @@
         .header p { font-size: 0.875rem; color: var(--text-muted); }
 
         .card { background-color: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1rem; border: 1px solid var(--border); }
-        .section-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-main); border-bottom: 2px solid var(--bg); padding-bottom: 0.5rem; }
+        .section-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main); border-bottom: 2px solid var(--bg); padding-bottom: 0.5rem; }
+        .notice-text { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; background: #FFFBEB; padding: 0.5rem; border-radius: 6px; border: 1px solid #FEF3C7; }
         
         .input-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
         .input-group label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.25rem; }
@@ -56,13 +57,22 @@
         .tech-check input { width: 16px; height: 16px; margin-right: 0.3rem; accent-color: var(--primary); cursor: pointer; transform: scale(1.1); }
         .tech-check:has(input:checked) { background: #FEF2F2; color: var(--primary); border-color: #FCA5A5; }
 
+        .tactic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.5rem; max-height: 320px; overflow-y: auto; padding: 0.5rem; background: var(--bg); border-radius: 8px; border: 1px solid var(--border); }
+        .tactic-card { display: block; position: relative; cursor: pointer; }
+        .tactic-card input { position: absolute; opacity: 0; width: 0; height: 0; }
+        .tactic-content { border: 2px solid transparent; border-radius: 8px; overflow: hidden; background: white; text-align: center; transition: 0.2s; height: 100%; display: flex; flex-direction: column; justify-content: space-between;}
+        .tactic-card input:checked + .tactic-content { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(185, 28, 28, 0.2); background: #FEF2F2; }
+        .tactic-content img { width: 100%; height: 80px; object-fit: contain; background: #E5E7EB; display: block; }
+        .tactic-content .no-img { height: 80px; display: flex; align-items: center; justify-content: center; background: #E5E7EB; color: #9CA3AF; font-size: 0.8rem; }
+        .tactic-content span { display: block; font-size: 0.8rem; padding: 0.4rem; font-weight: 600; color: var(--text-main); line-height: 1.3; }
+        .tactic-desc { font-size: 0.7rem; font-weight: 400; color: var(--text-muted); }
+
         .btn-group { display: flex; gap: 1rem; margin-bottom: 1rem; }
         button.calculate-btn { flex: 2; padding: 0.875rem; background-color: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.2s; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); }
         button.calculate-btn:hover { background-color: var(--primary-hover); }
         button.reset-btn { flex: 1; padding: 0.875rem; background-color: var(--reset-bg); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.2s; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); }
         button.reset-btn:hover { background-color: var(--reset-hover); }
 
-        /* 結果折疊面板樣式 */
         #result-container { display: none; margin-top: 1rem; padding: 1.25rem; border-radius: 12px; background-color: var(--bg); border: 1px solid var(--border); }
         .res-title { font-size: 1.2rem; font-weight: 800; color: var(--text-main); margin-bottom: 1rem; text-align: center; }
         
@@ -119,7 +129,7 @@
                 </div>
             </div>
             <div class="input-group">
-                <label data-i18n="label_mins">礦物 (Minerals)</label>
+                <label data-i18n="label_mins">資源 (Resources)</label>
                 <div class="num-wrap">
                     <button type="button" onclick="stepVal('in_mins', -1)">-</button>
                     <input type="number" id="in_mins" value="10" min="0">
@@ -137,13 +147,50 @@
         </div>
     </div>
 
+    <!-- 特殊狀況區 -->
+    <div class="card">
+        <div class="section-title" data-i18n="sec_edge_cases">特殊狀況 (Edge Cases)</div>
+        <p class="notice-text" data-i18n="note_edge">⚠️️ 注意：請自行加總其他未列出的武力加成（如：部分領袖、科技、城市建築等），並直接填入下方的「現有額外武力」中。</p>
+        
+        <div class="tactic-grid">
+            <label class="tactic-card">
+                <input type="checkbox" id="ec_gw">
+                <div class="tactic-content">
+                    <img src="edge_cases/great_wall.png" alt="Great Wall" onerror="this.outerHTML='<div class=\'no-img\'>No Img</div>'">
+                    <span><span data-i18n="ec_gw_name">長城 (Great Wall)</span><br><span class="tactic-desc" data-i18n="ec_gw_desc">步/砲 +1 武力</span></span>
+                </div>
+            </label>
+            <label class="tactic-card">
+                <input type="checkbox" id="ec_napoleon">
+                <div class="tactic-content">
+                    <img src="edge_cases/napoleon.png" alt="Napoleon" onerror="this.outerHTML='<div class=\'no-img\'>No Img</div>'">
+                    <span><span data-i18n="ec_nap_name">拿破侖 (Napoleon)</span><br><span class="tactic-desc" data-i18n="ec_nap_desc">每種兵種 +2 武力</span></span>
+                </div>
+            </label>
+            <label class="tactic-card">
+                <input type="checkbox" id="ec_marlene">
+                <div class="tactic-content">
+                    <img src="edge_cases/marlene.png" alt="Marlene" onerror="this.outerHTML='<div class=\'no-img\'>No Img</div>'">
+                    <span><span data-i18n="ec_mar_name">瑪琳 (Marlene)</span><br><span class="tactic-desc" data-i18n="ec_mar_desc">1部隊陣型雙倍計算</span></span>
+                </div>
+            </label>
+            <label class="tactic-card">
+                <input type="checkbox" id="ec_manhattan">
+                <div class="tactic-content">
+                    <img src="edge_cases/manhattan.png" alt="Manhattan" onerror="this.outerHTML='<div class=\'no-img\'>No Img</div>'">
+                    <span><span data-i18n="ec_man_name">曼哈頓 (Manhattan)</span><br><span class="tactic-desc" data-i18n="ec_man_desc">花14資源換13武力</span></span>
+                </div>
+            </label>
+        </div>
+    </div>
+
     <!-- 兵種區 -->
     <div class="card">
         <div class="section-title" data-i18n="sec_units">現有兵種數量 & 研發狀態</div>
         
         <div class="input-row" style="margin-bottom: 1.5rem;">
             <div class="input-group">
-                <label data-i18n="label_extra_str">現有額外武力 (包含科技、領袖、殖民地等)</label>
+                <label data-i18n="label_extra_str">現有額外武力 (未列出的科技、領袖等)</label>
                 <div class="num-wrap">
                     <button type="button" onclick="stepVal('in_extra_str', -1)">-</button>
                     <input type="number" id="in_extra_str" value="0" min="0">
@@ -205,32 +252,56 @@
     const dict = {
         'TW': {
             'title': 'TTA 軍力最佳化計算機', 'subtitle': '給定資源與陣型，計算最大潛在武力',
-            'sec_resources': '可用資源', 'label_ma': '軍事行動點 (MA)', 'label_mins': '礦物 (Minerals)', 'label_pop': '閒置人口 (Pop)',
-            'sec_units': '現有兵種數量 & 研發狀態', 'label_extra_str': '現有額外武力 (包含科技、領袖、殖民地等)',
+            'sec_resources': '可用資源', 'label_ma': '軍事行動點 (MA)', 'label_mins': '資源 (Resources)', 'label_pop': '閒置人口 (Pop)',
+            'sec_edge_cases': '特殊狀況 (Edge Cases)', 'note_edge': '⚠️ 注意：請自行加總其他未列出的武力加成（如：部分領袖、科技、城市建築等），並直接填入下方的「現有額外武力」中。',
+            'ec_gw_name': '長城 (Great Wall)', 'ec_gw_desc': '步/砲 +1 武力',
+            'ec_nap_name': '拿破侖 (Napoleon)', 'ec_nap_desc': '每種兵種 +2 武力',
+            'ec_mar_name': '瑪琳 (Marlene)', 'ec_mar_desc': '1部隊陣型雙倍計算',
+            'ec_man_name': '曼哈頓 (Manhattan)', 'ec_man_desc': '花14資源換13武力',
+            'sec_units': '現有兵種數量 & 研發狀態', 'label_extra_str': '現有額外武力 (未列出的科技、領袖等)',
             'lbl_air': '戰機 (Air)', 'lbl_art': '砲兵 (Art)', 'lbl_cav': '騎兵 (Cav)', 'lbl_inf': '步兵 (Inf)', 'lbl_tech': '解鎖',
             'btn_reset': '重置', 'btn_calc': '計算最大武力推薦', 
             'res_title_main': '🏆 最佳戰術推薦組合',
             'res_final_units': '最終盤面部隊數量：', 'res_path': '最佳行動順序：', 'no_tactic': '無陣型',
             'cat_0': '🔰 已在場上陣型 (耗費 0 MA)', 'cat_1': '🃏 手中打出陣型 (耗費 1 MA)', 'cat_2': '👀 複製公共陣型 (耗費 2 MA)',
-            'err_not_enough_ma': '軍事行動點不足以執行此類操作', 'err_no_comb': '無符合條件的組合'
+            'err_not_enough_ma': '軍事行動點不足以執行此類操作', 'err_no_comb': '無符合條件的組合',
+            'txt_breakdown': '(部隊 {b} + 陣型 {t}', 'txt_air': ' + 戰機翻倍 {a}', 'txt_man': ' + 曼哈頓 13', 'txt_extra': ' + 額外 {e})',
+            'txt_cost': '消耗：{ma} MA, {min} 資源, {pop} 人口',
+            'txt_play': '打出此陣型 (1 MA)', 'txt_copy': '複製此公共陣型 (2 MA)',
+            'txt_upg': '升級 {from} ➔ {to} x {c} ({ma} MA)', 'txt_bld': '建造 {to} x {c} ({ma} MA)',
+            'txt_bld_man': '建造 曼哈頓計畫 (0 MA) [+13武力]', 'txt_none': '無須任何行動 (保持現狀)'
         },
         'EN': {
             'title': 'TTA Military Optimizer', 'subtitle': 'Calculate max strength based on resources & tactics',
-            'sec_resources': 'Available Resources', 'label_ma': 'Military Actions (MA)', 'label_mins': 'Minerals', 'label_pop': 'Idle Pop',
-            'sec_units': 'Current Units & Unlocked Techs', 'label_extra_str': 'Current Extra Strength (Techs, Leaders, Colonies, etc.)',
+            'sec_resources': 'Available Resources', 'label_ma': 'Military Actions (MA)', 'label_mins': 'Resources', 'label_pop': 'Idle Pop',
+            'sec_edge_cases': 'Edge Cases', 'note_edge': '⚠️ Note: Please manually add any other unlisted strength bonuses (e.g., leaders, technologies, urban buildings) into "Current Extra Strength" below.',
+            'ec_gw_name': 'Great Wall', 'ec_gw_desc': '+1 Str per Inf/Art',
+            'ec_nap_name': 'Napoleon', 'ec_nap_desc': '+2 Str per unit type',
+            'ec_mar_name': 'Marlene', 'ec_mar_desc': '1 unit counts twice for tactic',
+            'ec_man_name': 'Manhattan', 'ec_man_desc': '14 Res for 13 Str',
+            'sec_units': 'Current Units & Unlocked Techs', 'label_extra_str': 'Current Extra Strength (Techs, Leaders, etc.)',
             'lbl_air': 'Air', 'lbl_art': 'Artillery', 'lbl_cav': 'Cavalry', 'lbl_inf': 'Infantry', 'lbl_tech': 'Unlock',
             'btn_reset': 'Reset', 'btn_calc': 'Calculate Best Combinations', 
             'res_title_main': '🏆 Best Tactic Recommendations',
             'res_final_units': 'Final Unit Status:', 'res_path': 'Optimal Action Sequence:', 'no_tactic': 'No Tactic',
             'cat_0': '🔰 Active Tactic (Cost 0 MA)', 'cat_1': '🃏 Play from Hand (Cost 1 MA)', 'cat_2': '👀 Copy Common (Cost 2 MA)',
-            'err_not_enough_ma': 'Not enough MA for this category', 'err_no_comb': 'No combinations found'
+            'err_not_enough_ma': 'Not enough MA for this category', 'err_no_comb': 'No combinations found',
+            'txt_breakdown': '(Units {b} + Tactic {t}', 'txt_air': ' + Air Double {a}', 'txt_man': ' + Manhattan 13', 'txt_extra': ' + Extra {e})',
+            'txt_cost': 'Used: {ma} MA, {min} Resources, {pop} Pop',
+            'txt_play': 'Play this tactic from hand (1 MA)', 'txt_copy': 'Copy this common tactic (2 MA)',
+            'txt_upg': 'Upgrade {from} ➔ {to} x {c} ({ma} MA)', 'txt_bld': 'Build {to} x {c} ({ma} MA)',
+            'txt_bld_man': 'Build Manhattan Project (0 MA) [+13 Str]', 'txt_none': 'No actions needed (Keep as is)'
         }
     };
     
     let lang = 'TW';
     function toggleLang() {
         lang = (lang === 'TW') ? 'EN' : 'TW';
-        document.querySelectorAll('[data-i18n]').forEach(el => el.innerText = dict[lang][el.getAttribute('data-i18n')]);
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            if (dict[lang][el.getAttribute('data-i18n')]) {
+                el.innerText = dict[lang][el.getAttribute('data-i18n')];
+            }
+        });
         document.getElementById('result-container').style.display = 'none'; 
     }
 
@@ -261,6 +332,8 @@
         document.getElementById('in_mins').value = 10;
         document.getElementById('in_pop').value = 99; 
         document.getElementById('in_extra_str').value = 0;
+        
+        ['ec_gw', 'ec_napoleon', 'ec_marlene', 'ec_manhattan'].forEach(id => document.getElementById(id).checked = false);
         
         const unitIds = ['u_airIII', 'u_artIII', 'u_cavIII', 'u_infIII', 'u_artII', 'u_cavII', 'u_infII', 'u_cavI', 'u_infI', 'u_infA'];
         unitIds.forEach(id => document.getElementById(id).value = 0);
@@ -341,48 +414,88 @@
         memoParts[key] = res; return res;
     }
 
-    function evaluateStr(u, t) {
+    function evaluateStr(u, t, options) {
         let air_count = u[9];
-        let base = 0; for(let i=0; i<10; i++) base += u[i] * UNIT_DB[i].str;
-        if(t.id === 'none') return { total: base, base, bonus: 0, air_bonus: 0 };
+        let base = 0; 
+        for(let i=0; i<10; i++) base += u[i] * UNIT_DB[i].str;
         
-        let bonuses = [];
-        if(t.id === 'spec') {
-            let cavs = [];
-            for(let i=0; i<u[6]; i++) cavs.push(3);
-            for(let i=0; i<u[5]; i++) cavs.push(2);
-            for(let i=0; i<u[4]; i++) cavs.push(1);
-            while(cavs.length >= 2) { 
-                let c1=cavs.shift(); let c2=cavs.shift(); 
-                bonuses.push(2 + Math.min(c1, c2));
+        if (options.great_wall) {
+            base += u[0]+u[1]+u[2]+u[3] + u[7]+u[8];
+        }
+        if (options.napoleon) {
+            if (u[0]+u[1]+u[2]+u[3] > 0) base += 2;
+            if (u[4]+u[5]+u[6] > 0) base += 2;
+            if (u[7]+u[8] > 0) base += 2;
+            if (u[9] > 0) base += 2;
+        }
+
+        if(t.id === 'none') return { total: base, base: base, bonus: 0, air_bonus: 0 };
+        
+        function calcTac(marlene_type) {
+            let temp_air = air_count;
+            let bonuses = [];
+            if(t.id === 'spec') {
+                let cavs = [];
+                for(let i=0; i<u[6]; i++) cavs.push(3);
+                for(let i=0; i<u[5]; i++) cavs.push(2);
+                for(let i=0; i<u[4]; i++) cavs.push(1);
+                
+                if (marlene_type === 2 && cavs.length > 0) {
+                    cavs.push(cavs[0]); 
+                    cavs.sort((a,b)=>b-a);
+                }
+                while(cavs.length >= 2) { 
+                    let c1=cavs.shift(); let c2=cavs.shift(); 
+                    bonuses.push(2 + Math.min(c1, c2));
+                }
+            } else {
+                let c = { i:0, c:0, a:0 }, v = { i:0, c:0, a:0 };
+                for(let i=0; i<=3; i++) { c.i += u[i]; if(UNIT_DB[i].age >= t.age - 1) v.i += u[i]; }
+                for(let i=4; i<=6; i++) { c.c += u[i]; if(UNIT_DB[i].age >= t.age - 1) v.c += u[i]; }
+                for(let i=7; i<=8; i++) { c.a += u[i]; if(UNIT_DB[i].age >= t.age - 1) v.a += u[i]; }
+                
+                if (marlene_type === 1) {
+                    if (v.i > 0) { v.i++; c.i++; } else if (c.i > 0) { c.i++; }
+                } else if (marlene_type === 2) {
+                    if (v.c > 0) { v.c++; c.c++; } else if (c.c > 0) { c.c++; }
+                } else if (marlene_type === 3) {
+                    if (v.a > 0) { v.a++; c.a++; } else if (c.a > 0) { c.a++; }
+                }
+
+                let mf = Infinity, mt = Infinity;
+                if(t.req.i > 0) { mf = Math.min(mf, Math.floor(v.i/t.req.i)); mt = Math.min(mt, Math.floor(c.i/t.req.i)); }
+                if(t.req.c > 0) { mf = Math.min(mf, Math.floor(v.c/t.req.c)); mt = Math.min(mt, Math.floor(c.c/t.req.c)); }
+                if(t.req.a > 0) { mf = Math.min(mf, Math.floor(v.a/t.req.a)); mt = Math.min(mt, Math.floor(c.a/t.req.a)); }
+                if(mf === Infinity) mf = 0; if(mt === Infinity) mt = 0;
+                
+                for(let k=0; k<mf; k++) bonuses.push(t.f);
+                for(let k=0; k<mt-mf; k++) bonuses.push(t.ant);
             }
-        } else {
-            let c = { i:0, c:0, a:0 }, v = { i:0, c:0, a:0 };
-            for(let i=0; i<=3; i++) { c.i += u[i]; if(UNIT_DB[i].age >= t.age - 1) v.i += u[i]; }
-            for(let i=4; i<=6; i++) { c.c += u[i]; if(UNIT_DB[i].age >= t.age - 1) v.c += u[i]; }
-            for(let i=7; i<=8; i++) { c.a += u[i]; if(UNIT_DB[i].age >= t.age - 1) v.a += u[i]; }
             
-            let mf = Infinity, mt = Infinity;
-            if(t.req.i > 0) { mf = Math.min(mf, Math.floor(v.i/t.req.i)); mt = Math.min(mt, Math.floor(c.i/t.req.i)); }
-            if(t.req.c > 0) { mf = Math.min(mf, Math.floor(v.c/t.req.c)); mt = Math.min(mt, Math.floor(c.c/t.req.c)); }
-            if(t.req.a > 0) { mf = Math.min(mf, Math.floor(v.a/t.req.a)); mt = Math.min(mt, Math.floor(c.a/t.req.a)); }
-            if(mf === Infinity) mf = 0; if(mt === Infinity) mt = 0;
-            
-            for(let k=0; k<mf; k++) bonuses.push(t.f);
-            for(let k=0; k<mt-mf; k++) bonuses.push(t.ant);
+            bonuses.sort((a,b) => b - a);
+            let tactic_base = 0;
+            let air_bonus = 0;
+            for(let k=0; k<bonuses.length; k++) {
+                tactic_base += bonuses[k];
+                if (temp_air > 0) {
+                    air_bonus += bonuses[k]; 
+                    temp_air--;
+                }
+            }
+            return { tactic_base, air_bonus };
+        }
+
+        let best_tac = calcTac(0);
+        if (options.marlene) {
+            [1, 2, 3].forEach(m_type => {
+                let temp_tac = calcTac(m_type);
+                if (temp_tac.tactic_base + temp_tac.air_bonus > best_tac.tactic_base + best_tac.air_bonus) {
+                    best_tac = temp_tac;
+                }
+            });
         }
         
-        bonuses.sort((a,b) => b - a);
-        let tactic_base = 0;
-        let air_bonus = 0;
-        for(let k=0; k<bonuses.length; k++) {
-            tactic_base += bonuses[k];
-            if (air_count > 0) {
-                air_bonus += bonuses[k];
-                air_count--;
-            }
-        }
-        return { total: base + tactic_base + air_bonus, base: base, bonus: tactic_base, air_bonus: air_bonus };
+        return { total: base + best_tac.tactic_base + best_tac.air_bonus, base: base, bonus: best_tac.tactic_base, air_bonus: best_tac.air_bonus };
     }
 
     function renderAccordionItem(item, cost, init_ma, mins, pop, extra_str, init_u) {
@@ -399,14 +512,16 @@
         let bonusStr = item.state.e.bonus;
         let airBonusStr = item.state.e.air_bonus;
         
-        let breakdownTxt = lang === 'TW' ? `(部隊武力 ${baseStr} + 陣型 ${bonusStr}` : `(Units ${baseStr} + Tactic ${bonusStr}`;
-        if (airBonusStr > 0) breakdownTxt += lang === 'TW' ? ` + 戰機翻倍 ${airBonusStr}` : ` + Air Double ${airBonusStr}`;
-        breakdownTxt += lang === 'TW' ? ` + 額外 ${extra_str})` : ` + Extra ${extra_str})`;
-        let costTxt = lang === 'TW' ? `消耗：${total_ma_used} MA, ${used_min} 礦物, ${used_pop} 人口` : `Used: ${total_ma_used} MA, ${used_min} Minerals, ${used_pop} Pop`;
+        let breakdownTxt = dict[lang]['txt_breakdown'].replace('{b}', baseStr).replace('{t}', bonusStr);
+        if (airBonusStr > 0) breakdownTxt += dict[lang]['txt_air'].replace('{a}', airBonusStr);
+        if (item.state.built_manhattan) breakdownTxt += dict[lang]['txt_man'];
+        breakdownTxt += dict[lang]['txt_extra'].replace('{e}', extra_str);
+        
+        let costTxt = dict[lang]['txt_cost'].replace('{ma}', total_ma_used).replace('{min}', used_min).replace('{pop}', used_pop);
 
         let pathHtml = '';
-        if (cost === 1) pathHtml += `<li>${lang==='TW'?'打出此陣型 (1 MA)':'Play this tactic from hand (1 MA)'}</li>`;
-        if (cost === 2) pathHtml += `<li>${lang==='TW'?'複製此公共陣型 (2 MA)':'Copy this common tactic (2 MA)'}</li>`;
+        if (cost === 1) pathHtml += `<li>${dict[lang]['txt_play']}</li>`;
+        if (cost === 2) pathHtml += `<li>${dict[lang]['txt_copy']}</li>`;
         
         let builtOrUpgraded = false;
         item.path.forEach(stepItem => {
@@ -416,7 +531,7 @@
                 for(let i=1; i<p.length; i++) {
                     if(p[i] > 0) {
                         let to = UNIT_DB[targets[i]];
-                        pathHtml += `<li>${lang === 'TW' ? `升級 ${from.n_tw} ➔${to.n_tw} x ${p[i]} (${p[i]} MA)` : `Upgrade ${from.n_en} ➔${to.n_en} x ${p[i]} (${p[i]} MA)`}</li>`;
+                        pathHtml += `<li>${dict[lang]['txt_upg'].replace('{from}', lang==='TW'?from.n_tw:from.n_en).replace('{to}', lang==='TW'?to.n_tw:to.n_en).replace('{c}', p[i]).replace('{ma}', p[i])}</li>`;
                         builtOrUpgraded = true;
                     }
                 }
@@ -424,12 +539,18 @@
                 let count = stepItem.count;
                 if (count > 0) {
                     let to = UNIT_DB[stepItem.s - 10];
-                    pathHtml += `<li>${lang === 'TW' ? `建造 ${to.n_tw} x ${count} (${count} MA)` : `Build ${to.n_en} x ${count} (${count} MA)`}</li>`;
+                    pathHtml += `<li>${dict[lang]['txt_bld'].replace('{to}', lang==='TW'?to.n_tw:to.n_en).replace('{c}', count).replace('{ma}', count)}</li>`;
                     builtOrUpgraded = true;
                 }
             }
         });
-        if (!builtOrUpgraded && cost === 0) pathHtml += `<li>${lang==='TW'?'無須任何行動 (保持現狀)':'No actions needed (Keep as is)'}</li>`;
+        
+        if (item.state.built_manhattan) {
+            pathHtml += `<li>${dict[lang]['txt_bld_man']}</li>`;
+            builtOrUpgraded = true;
+        }
+
+        if (!builtOrUpgraded && cost === 0) pathHtml += `<li>${dict[lang]['txt_none']}</li>`;
 
         let finalGridHtml = generateFinalGridHtml(item.state.u, init_u);
 
@@ -464,28 +585,38 @@
         
         let init_u = [C('u_infA'), C('u_infI'), C('u_infII'), C('u_infIII'), C('u_cavI'), C('u_cavII'), C('u_cavIII'), C('u_artII'), C('u_artIII'), C('u_airIII')];
 
+        let options = {
+            great_wall: document.getElementById('ec_gw').checked,
+            napoleon: document.getElementById('ec_napoleon').checked,
+            marlene: document.getElementById('ec_marlene').checked,
+            manhattan: document.getElementById('ec_manhattan').checked
+        };
+
         let activeTargets = [];
         for (let i = 0; i < 10; i++) activeTargets[i] = TARGETS_BASE[i].filter(t => t === i || isUnlocked(t));
         
         let best = { 0: [], 1: [], 2: [] };
         for(let c of [0, 1, 2]) TACTICS.forEach(t => best[c].push({ tactic: t, str: -1, state: null, path: [] }));
         
-        function dfs(step, r_ma, r_min, r_pop, u, path) {
+        function dfs(step, r_ma, r_min, r_pop, u, path, built_manhattan) {
             if(step === 20) {
                 let used_ma_units = init_ma - r_ma;
                 for(let i=0; i<TACTICS.length; i++) {
                     let t = TACTICS[i];
-                    let e = evaluateStr(u, t);
+                    let e = evaluateStr(u, t, options);
                     let total_str = e.total + extra_str;
+                    if (built_manhattan) total_str += 13;
+                    
+                    let st = {u:[...u], ma: r_ma, min: r_min, pop: r_pop, e: e, built_manhattan: built_manhattan};
                     
                     if (used_ma_units <= init_ma && total_str > best[0][i].str) {
-                        best[0][i] = { tactic: t, str: total_str, state: {u:[...u], ma: r_ma, min: r_min, pop: r_pop, e: e}, path: [...path] };
+                        best[0][i] = { tactic: t, str: total_str, state: st, path: [...path] };
                     }
                     if (t.id !== 'none' && used_ma_units <= init_ma - 1 && total_str > best[1][i].str) {
-                        best[1][i] = { tactic: t, str: total_str, state: {u:[...u], ma: r_ma, min: r_min, pop: r_pop, e: e}, path: [...path] };
+                        best[1][i] = { tactic: t, str: total_str, state: st, path: [...path] };
                     }
                     if (t.id !== 'none' && used_ma_units <= init_ma - 2 && total_str > best[2][i].str) {
-                        best[2][i] = { tactic: t, str: total_str, state: {u:[...u], ma: r_ma, min: r_min, pop: r_pop, e: e}, path: [...path] };
+                        best[2][i] = { tactic: t, str: total_str, state: st, path: [...path] };
                     }
                 }
                 return;
@@ -505,7 +636,7 @@
                         let nu = [...u];
                         for(let i=0; i<p.length; i++) nu[targets[i]] += p[i];
                         path.push({s: step, p: p, t: targets});
-                        dfs(step+1, r_ma - c_ma, r_min - c_min, r_pop, nu, path);
+                        dfs(step+1, r_ma - c_ma, r_min - c_min, r_pop, nu, path, built_manhattan);
                         path.pop();
                     }
                 }
@@ -519,13 +650,16 @@
                     let nu = [...u];
                     nu[target_unit] += count;
                     path.push({s: step, count: count});
-                    dfs(step+1, r_ma - count, r_min - count * UNIT_DB[target_unit].cost, r_pop - count, nu, path);
+                    dfs(step+1, r_ma - count, r_min - count * UNIT_DB[target_unit].cost, r_pop - count, nu, path, built_manhattan);
                     path.pop();
                 }
             }
         }
         
-        dfs(0, init_ma, mins, pop, [0,0,0,0,0,0,0,0,0,0], []);
+        dfs(0, init_ma, mins, pop, [0,0,0,0,0,0,0,0,0,0], [], false);
+        if (options.manhattan && mins >= 14) {
+            dfs(0, init_ma, mins - 14, pop, [0,0,0,0,0,0,0,0,0,0], [], true);
+        }
         
         resDiv.innerHTML = '';
         [0, 1, 2].forEach(cost => {
