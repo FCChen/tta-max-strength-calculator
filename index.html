@@ -150,7 +150,7 @@
     <!-- 特殊狀況區 -->
     <div class="card">
         <div class="section-title" data-i18n="sec_edge_cases">特殊狀況 (Edge Cases)</div>
-        <p class="notice-text" data-i18n="note_edge">⚠️️ 注意：請自行加總其他未列出的武力加成（如：部分領袖、科技、城市建築等），並直接填入下方的「現有額外武力」中。</p>
+        <p class="notice-text" data-i18n="note_edge">⚠ 注意：請自行加總其他未列出的武力加成（如：部分領袖、科技、城市建築等），並直接填入下方的「現有額外武力」中。</p>
         
         <div class="tactic-grid">
             <label class="tactic-card">
@@ -207,25 +207,25 @@
                 <div class="header-cell" data-i18n="lbl_cav">騎兵 (Cav)</div>
                 <div class="header-cell" data-i18n="lbl_inf">步兵 (Inf)</div>
                 
-                <div class="label-cell">III<br><span style="font-size:0.7rem; color:var(--text-muted)">(5武/7礦)</span></div>
+                <div class="label-cell">III<br><span style="font-size:0.7rem; color:var(--text-muted)" data-i18n="cost_III">(5武/7資源)</span></div>
                 <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_9"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_airIII', -1)">-</button><input type="number" id="u_airIII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_airIII', 1)">+</button></div></div>
                 <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_8"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_artIII', -1)">-</button><input type="number" id="u_artIII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_artIII', 1)">+</button></div></div>
                 <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_6"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_cavIII', -1)">-</button><input type="number" id="u_cavIII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_cavIII', 1)">+</button></div></div>
                 <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_3"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_infIII', -1)">-</button><input type="number" id="u_infIII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_infIII', 1)">+</button></div></div>
 
-                <div class="label-cell">II<br><span style="font-size:0.7rem; color:var(--text-muted)">(3武/5礦)</span></div>
+                <div class="label-cell">II<br><span style="font-size:0.7rem; color:var(--text-muted)" data-i18n="cost_II">(3武/5資源)</span></div>
                 <div class="cell-wrap"><div class="num-wrap disabled"><button type="button" disabled>-</button><input type="number" disabled value="-"><button type="button" disabled>+</button></div></div>
                 <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_7"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_artII', -1)">-</button><input type="number" id="u_artII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_artII', 1)">+</button></div></div>
                 <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_5"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_cavII', -1)">-</button><input type="number" id="u_cavII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_cavII', 1)">+</button></div></div>
                 <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_2"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_infII', -1)">-</button><input type="number" id="u_infII" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_infII', 1)">+</button></div></div>
 
-                <div class="label-cell">I<br><span style="font-size:0.7rem; color:var(--text-muted)">(2武/3礦)</span></div>
+                <div class="label-cell">I<br><span style="font-size:0.7rem; color:var(--text-muted)" data-i18n="cost_I">(2武/3資源)</span></div>
                 <div class="cell-wrap"><div class="num-wrap disabled"><button type="button" disabled>-</button><input type="number" disabled value="-"><button type="button" disabled>+</button></div></div>
                 <div class="cell-wrap"><div class="num-wrap disabled"><button type="button" disabled>-</button><input type="number" disabled value="-"><button type="button" disabled>+</button></div></div>
                 <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_4"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_cavI', -1)">-</button><input type="number" id="u_cavI" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_cavI', 1)">+</button></div></div>
                 <div class="cell-wrap"><label class="tech-check"><input type="checkbox" id="en_1"><span data-i18n="lbl_tech">解鎖</span></label><div class="num-wrap"><button type="button" onclick="stepVal('u_infI', -1)">-</button><input type="number" id="u_infI" value="0" min="0" oninput="checkAutoUnlock(this.id)"><button type="button" onclick="stepVal('u_infI', 1)">+</button></div></div>
 
-                <div class="label-cell">A<br><span style="font-size:0.7rem; color:var(--text-muted)">(1武/2礦)</span></div>
+                <div class="label-cell">A<br><span style="font-size:0.7rem; color:var(--text-muted)" data-i18n="cost_A">(1武/2資源)</span></div>
                 <div class="cell-wrap"><div class="num-wrap disabled"><button type="button" disabled>-</button><input type="number" disabled value="-"><button type="button" disabled>+</button></div></div>
                 <div class="cell-wrap"><div class="num-wrap disabled"><button type="button" disabled>-</button><input type="number" disabled value="-"><button type="button" disabled>+</button></div></div>
                 <div class="cell-wrap"><div class="num-wrap disabled"><button type="button" disabled>-</button><input type="number" disabled value="-"><button type="button" disabled>+</button></div></div>
@@ -260,6 +260,7 @@
             'ec_man_name': '曼哈頓 (Manhattan)', 'ec_man_desc': '花14資源換13武力',
             'sec_units': '現有兵種數量 & 研發狀態', 'label_extra_str': '現有額外武力 (未列出的科技、領袖等)',
             'lbl_air': '戰機 (Air)', 'lbl_art': '砲兵 (Art)', 'lbl_cav': '騎兵 (Cav)', 'lbl_inf': '步兵 (Inf)', 'lbl_tech': '解鎖',
+            'cost_III': '(5武/7資源)', 'cost_II': '(3武/5資源)', 'cost_I': '(2武/3資源)', 'cost_A': '(1武/2資源)',
             'btn_reset': '重置', 'btn_calc': '計算最大武力推薦', 
             'res_title_main': '🏆 最佳戰術推薦組合',
             'res_final_units': '最終盤面部隊數量：', 'res_path': '最佳行動順序：', 'no_tactic': '無陣型',
@@ -281,6 +282,7 @@
             'ec_man_name': 'Manhattan', 'ec_man_desc': '14 Res for 13 Str',
             'sec_units': 'Current Units & Unlocked Techs', 'label_extra_str': 'Current Extra Strength (Techs, Leaders, etc.)',
             'lbl_air': 'Air', 'lbl_art': 'Artillery', 'lbl_cav': 'Cavalry', 'lbl_inf': 'Infantry', 'lbl_tech': 'Unlock',
+            'cost_III': '(5 Str/7 Res)', 'cost_II': '(3 Str/5 Res)', 'cost_I': '(2 Str/3 Res)', 'cost_A': '(1 Str/2 Res)',
             'btn_reset': 'Reset', 'btn_calc': 'Calculate Best Combinations', 
             'res_title_main': '🏆 Best Tactic Recommendations',
             'res_final_units': 'Final Unit Status:', 'res_path': 'Optimal Action Sequence:', 'no_tactic': 'No Tactic',
